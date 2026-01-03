@@ -1,0 +1,71 @@
+John Smith
+john.smith@email.com | (555) 123-4567 | San Francisco, CA
+LinkedIn: linkedin.com/in/johnsmith
+
+PROFESSIONAL SUMMARY
+Experienced Data Scientist with 5+ years of expertise in machine learning, statistical analysis, 
+and data visualization. Passionate about leveraging AI to solve complex business problems. 
+Proven track record of delivering production ML models that drive business value.
+
+TECHNICAL SKILLS
+Programming: Python, R, SQL, Scala
+ML/AI: TensorFlow, PyTorch, Scikit-learn, XGBoost, LightGBM, Keras
+Data: Pandas, NumPy, Spark, Hadoop, Airflow
+NLP: NLTK, spaCy, Transformers, BERT, GPT, LangChain
+Cloud: AWS (SageMaker, EC2, S3), GCP (Vertex AI, BigQuery), Azure ML
+Visualization: Tableau, Power BI, Matplotlib, Plotly
+Tools: Docker, Kubernetes, Git, MLflow, DVC, Jupyter
+
+PROFESSIONAL EXPERIENCE
+
+Senior Data Scientist | TechCorp Inc. | San Francisco, CA
+January 2020 - Present
+
+• Led development of customer churn prediction model achieving 92% accuracy, reducing churn by 15%
+• Built end-to-end NLP pipeline for sentiment analysis processing 1M+ customer reviews daily
+• Designed and deployed recommendation system increasing user engagement by 25%
+• Mentored team of 3 junior data scientists, conducting code reviews and knowledge sharing sessions
+• Implemented MLOps practices using MLflow, reducing model deployment time by 60%
+• Collaborated with product teams to translate business requirements into ML solutions
+
+Data Scientist | DataAnalytics Co. | Palo Alto, CA
+June 2018 - December 2019
+
+• Created predictive models for sales forecasting with MAPE of 8%, improving inventory planning
+• Implemented collaborative filtering recommendation system for e-commerce platform
+• Built automated ETL pipelines processing 10TB+ data daily using Spark and Airflow
+• Developed A/B testing framework for marketing campaign optimization
+• Conducted statistical analysis and presented insights to C-level executives
+
+Data Analyst | StartupXYZ | San Jose, CA
+August 2016 - May 2018
+
+• Performed exploratory data analysis on customer behavior datasets
+• Created interactive dashboards using Tableau for business stakeholders
+• Automated reporting processes using Python, saving 20 hours/week
+• Collaborated with engineering team on data infrastructure improvements
+
+EDUCATION
+
+Master of Science in Computer Science - Machine Learning Track
+Stanford University, Stanford, CA | 2016 - 2018
+GPA: 3.9/4.0 | Thesis: "Deep Learning for Time Series Forecasting"
+
+Bachelor of Science in Mathematics
+UC Berkeley, Berkeley, CA | 2012 - 2016
+GPA: 3.8/4.0 | Minor in Statistics
+
+CERTIFICATIONS
+• AWS Certified Machine Learning - Specialty (2023)
+• Google Cloud Professional Data Engineer (2022)
+• TensorFlow Developer Certificate (2021)
+• Deep Learning Specialization - Coursera (2020)
+
+PUBLICATIONS & PROJECTS
+• "Efficient NLP Pipelines for Real-time Sentiment Analysis" - KDD Workshop 2022
+• Open-source contributor to scikit-learn and pandas libraries
+• Personal project: Stock price prediction using LSTM networks (GitHub: 500+ stars)
+
+AWARDS
+• Data Science Excellence Award, TechCorp Inc. (2022)
+• Best Paper Award, Stanford CS229 Machine Learning Course (2017)

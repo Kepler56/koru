@@ -1,0 +1,72 @@
+JOB TITLE: Senior Machine Learning Engineer
+COMPANY: AI Innovations Inc.
+LOCATION: San Francisco, CA (Hybrid - 3 days onsite)
+JOB TYPE: Full-time
+SALARY: $180,000 - $250,000 + Equity
+
+ABOUT US
+AI Innovations is a leading AI company developing cutting-edge machine learning solutions 
+for enterprise clients. Our products power intelligent automation for Fortune 500 companies 
+across healthcare, finance, and retail sectors. We're backed by top VCs and are on a mission 
+to democratize AI for businesses of all sizes.
+
+THE ROLE
+We're looking for a Senior Machine Learning Engineer to join our Core ML team. You'll be 
+responsible for designing, building, and deploying production ML systems that serve millions 
+of predictions daily. This is a high-impact role where you'll work on challenging problems 
+at the intersection of ML research and engineering.
+
+KEY RESPONSIBILITIES
+• Design and implement production-grade ML models for classification, NLP, and recommendation systems
+• Lead ML projects from research and experimentation through production deployment
+• Build and maintain ML infrastructure including training pipelines, feature stores, and model serving
+• Collaborate with product managers and engineers to define ML-powered features
+• Mentor junior team members and contribute to engineering best practices
+• Stay current with ML research and evaluate new techniques for business applications
+• Participate in on-call rotation for ML systems
+• Write technical documentation and present to stakeholders
+
+REQUIRED QUALIFICATIONS
+• 5+ years of experience in machine learning engineering or applied ML research
+• Strong proficiency in Python and ML frameworks (TensorFlow, PyTorch, JAX)
+• Experience building and deploying ML models in production environments
+• Expertise in at least one ML domain: NLP, Computer Vision, or Recommendation Systems
+• Solid understanding of ML fundamentals: optimization, regularization, model evaluation
+• Experience with MLOps tools and practices (MLflow, Kubeflow, or similar)
+• Strong software engineering skills including testing, code review, and documentation
+• Master's degree in Computer Science, Statistics, or related quantitative field
+
+PREFERRED QUALIFICATIONS
+• Experience with Large Language Models (LLMs) and Generative AI
+• Publications in top ML conferences (NeurIPS, ICML, ACL, CVPR)
+• Experience with distributed training and large-scale ML systems
+• AWS or GCP machine learning certifications
+• PhD in Machine Learning or related field
+• Experience in healthcare, finance, or retail ML applications
+• Familiarity with LangChain, vector databases, and RAG systems
+
+TECH STACK
+• Languages: Python, SQL
+• ML: TensorFlow, PyTorch, Scikit-learn, Hugging Face Transformers
+• Infrastructure: AWS (SageMaker, EC2), Kubernetes, Docker
+• Data: Spark, Airflow, Snowflake, PostgreSQL
+• MLOps: MLflow, Weights & Biases, DVC
+
+BENEFITS
+• Competitive salary and equity package
+• Comprehensive health, dental, and vision insurance
+• 401(k) with 4% company match
+• Unlimited PTO policy
+• $5,000 annual learning & development budget
+• Home office setup allowance
+• Weekly team lunches and monthly team events
+• Gym membership reimbursement
+• Parental leave (16 weeks)
+
+HOW TO APPLY
+Please submit your resume along with:
+1. A brief cover letter explaining your interest and relevant experience
+2. Links to any relevant projects, publications, or GitHub repositories
+3. Your availability for interviews
+
+We are an equal opportunity employer and value diversity at our company.

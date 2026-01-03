@@ -1,0 +1,83 @@
+Michael Chen
+m.chen@email.com | (555) 456-7890 | New York, NY
+LinkedIn: linkedin.com/in/michaelchen
+
+PROFILE
+Results-driven Marketing Analyst with 3 years of experience in digital marketing analytics 
+and campaign optimization. Strong foundation in data analysis with expertise in transforming 
+complex data into actionable business insights. Skilled in A/B testing, attribution modeling, 
+and marketing ROI optimization.
+
+SKILLS
+Analytics: Google Analytics 4, Adobe Analytics, Mixpanel, Amplitude
+Data Analysis: Excel (Advanced), SQL, Python, R
+Visualization: Tableau, Power BI, Looker, Google Data Studio
+Marketing: SEO/SEM, Social Media Marketing, Email Marketing, Content Strategy
+Tools: HubSpot, Salesforce, Google Ads, Meta Ads Manager, Mailchimp
+Statistics: A/B Testing, Regression Analysis, Cohort Analysis, Attribution Modeling
+
+PROFESSIONAL EXPERIENCE
+
+Marketing Analyst | BrandCo | New York, NY
+June 2022 - Present
+
+• Analyzed marketing campaign performance across 10+ channels, managing $5M+ annual budget
+• Built executive dashboards tracking 50+ KPIs, reducing reporting time by 60%
+• Designed and executed A/B tests for landing pages, increasing conversion rates by 35%
+• Developed attribution model improving marketing spend allocation, resulting in 25% ROI increase
+• Created customer segmentation models identifying high-value audience segments
+• Collaborated with creative team to optimize ad copy based on performance data
+
+Marketing Coordinator | MediaAgency | New York, NY
+August 2021 - May 2022
+
+• Managed social media accounts totaling 500K+ followers across platforms
+• Conducted competitive analysis and market research for client campaigns
+• Analyzed email marketing performance and recommended optimization strategies
+• Created weekly performance reports for account managers and clients
+• Assisted in developing content calendars and campaign strategies
+
+Marketing Intern | TechStartup | Brooklyn, NY
+May 2021 - July 2021
+
+• Supported marketing team with data collection and analysis
+• Assisted in managing social media content and scheduling
+• Conducted keyword research for SEO optimization
+• Compiled market research reports
+
+EDUCATION
+
+Bachelor of Business Administration - Marketing Concentration
+NYU Stern School of Business | 2017 - 2021
+GPA: 3.6/4.0
+Dean's List: Fall 2019, Spring 2020, Fall 2020
+
+Relevant Coursework:
+• Marketing Analytics
+• Consumer Behavior
+• Digital Marketing Strategy
+• Statistics for Business
+• Data Visualization
+
+CERTIFICATIONS
+• Google Analytics Certified (GA4)
+• Google Ads Search Certification
+• HubSpot Inbound Marketing Certification
+• Meta Blueprint Certification
+• Tableau Desktop Specialist
+
+PROJECTS
+
+Marketing Mix Modeling Project
+• Built regression model to analyze marketing channel effectiveness
+• Identified optimal budget allocation across 8 marketing channels
+• Presented findings to marketing leadership, influencing Q4 strategy
+
+Customer Lifetime Value Analysis
+• Developed Python-based CLV model for subscription business
+• Created Tableau dashboard for tracking customer cohort metrics
+• Recommendations led to 20% improvement in retention campaigns
+
+SKILLS ADDITIONAL
+• Languages: English (Native), Mandarin Chinese (Fluent)
+• Interests: Data journalism, behavioral economics, digital trends

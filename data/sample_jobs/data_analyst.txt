@@ -1,0 +1,91 @@
+JOB TITLE: Data Analyst
+COMPANY: RetailGiant Corp.
+LOCATION: New York, NY (Onsite)
+JOB TYPE: Full-time
+SALARY: $80,000 - $110,000 + Annual Bonus
+
+ABOUT RETAILGIANT
+RetailGiant Corp. is one of America's largest retail chains with over 2,000 stores 
+nationwide and a rapidly growing e-commerce presence. We serve millions of customers 
+daily and are committed to delivering exceptional value and customer experience. 
+Our analytics team plays a crucial role in driving data-informed decisions across 
+merchandising, marketing, and operations.
+
+ROLE OVERVIEW
+We're seeking a Data Analyst to join our Business Intelligence team. In this role, 
+you'll analyze large datasets to uncover insights that drive business strategy, 
+create dashboards for stakeholders, and support cross-functional teams with 
+data-driven recommendations. This is an excellent opportunity for someone who 
+loves turning data into stories that impact business decisions.
+
+KEY RESPONSIBILITIES
+• Analyze large datasets (10M+ rows) to identify trends, patterns, and actionable insights
+• Create and maintain interactive dashboards and reports for business stakeholders
+• Support marketing team with campaign performance analysis and customer segmentation
+• Partner with merchandising team on pricing analysis and inventory optimization
+• Develop and automate recurring reports, reducing manual effort
+• Conduct ad-hoc analyses to answer business questions
+• Present findings to both technical and non-technical audiences
+• Collaborate with data engineering team on data quality initiatives
+• Document analysis methodologies and maintain data dictionaries
+
+QUALIFICATIONS
+
+Required:
+• Bachelor's degree in Business, Statistics, Economics, Mathematics, or related field
+• 2+ years of experience in data analysis or business intelligence role
+• Expert proficiency in Excel (pivot tables, VLOOKUP, complex formulas)
+• Strong SQL skills for querying relational databases
+• Experience with data visualization tools (Tableau or Power BI)
+• Excellent analytical and problem-solving abilities
+• Strong written and verbal communication skills
+• Attention to detail and ability to manage multiple projects
+
+Preferred:
+• Python or R programming experience for data analysis
+• Experience in retail, e-commerce, or consumer goods industry
+• Knowledge of statistical analysis and hypothesis testing
+• Familiarity with Google Analytics or Adobe Analytics
+• Experience with A/B testing and experimentation
+• MBA or advanced degree in quantitative field
+• Experience with cloud data warehouses (Snowflake, BigQuery, Redshift)
+
+TOOLS & TECHNOLOGIES
+• Analysis: Excel, SQL, Python, R
+• Visualization: Tableau, Power BI, Looker
+• Data: Snowflake, SQL Server, Google Analytics
+• Collaboration: Jira, Confluence, Slack
+
+WHAT WE OFFER
+• Competitive base salary ($80K-$110K based on experience)
+• Annual performance bonus (10-20% of base)
+• Comprehensive health benefits (medical, dental, vision)
+• 401(k) with 6% company match
+• Employee discount (25% off all purchases)
+• Paid time off (15 days) + 10 paid holidays
+• Professional development opportunities
+• Hybrid work flexibility (3 days onsite, 2 remote)
+• Commuter benefits
+
+CAREER GROWTH
+This role offers clear advancement opportunities:
+• Data Analyst → Senior Data Analyst (2-3 years)
+• Senior Data Analyst → Lead Analyst / Analytics Manager (3-5 years)
+• Analytics Manager → Director of Analytics
+
+INTERVIEW PROCESS
+1. Phone screen with HR (20 min)
+2. Technical assessment - SQL and Excel test (take-home, 1 hour)
+3. Video interview with hiring manager (45 min)
+4. Case study presentation (1 hour)
+5. Final round with team members (1 hour)
+
+Expected timeline: 2-3 weeks
+
+HOW TO APPLY
+Submit your resume and a brief cover letter explaining:
+1. Why you're interested in retail analytics
+2. An example of an impactful analysis you've conducted
+3. Your experience with SQL and visualization tools
+
+RetailGiant Corp. is an equal opportunity employer.

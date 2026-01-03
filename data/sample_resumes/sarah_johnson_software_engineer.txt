@@ -1,0 +1,72 @@
+Sarah Johnson
+sarah.johnson@email.com | (555) 987-6543 | Austin, TX
+GitHub: github.com/sarahjohnson | Portfolio: sarahj.dev
+
+SUMMARY
+Full-stack software engineer with 4 years of experience building scalable web applications 
+and distributed systems. Expert in React, Node.js, and cloud services. Passionate about 
+clean code, system design, and mentoring junior developers.
+
+SKILLS
+Frontend: React, TypeScript, Next.js, Angular, Vue.js, Redux, HTML5, CSS3, Tailwind
+Backend: Node.js, Express, Python, Django, FastAPI, GraphQL, REST APIs
+Databases: PostgreSQL, MongoDB, Redis, Elasticsearch, MySQL
+Cloud/DevOps: AWS, GCP, Docker, Kubernetes, Terraform, CI/CD, GitHub Actions
+Testing: Jest, Cypress, PyTest, Selenium
+Tools: Git, Jira, Figma, Datadog, New Relic
+
+EXPERIENCE
+
+Software Engineer | WebTech Solutions | Austin, TX
+March 2021 - Present
+
+• Developed React-based analytics dashboard serving 100K+ daily active users
+• Architected microservices system using Node.js and Docker, handling 10K requests/second
+• Reduced API response times by 40% through query optimization and caching strategies
+• Led migration from monolith to microservices architecture, improving deployment frequency 5x
+• Implemented real-time features using WebSockets and Redis pub/sub
+• Conducted technical interviews and mentored 2 junior engineers
+
+Full Stack Developer | StartupXYZ | Remote
+January 2020 - February 2021
+
+• Built e-commerce platform from scratch using Django and React, processing $2M+ transactions
+• Implemented payment integration with Stripe, PayPal, and cryptocurrency payments
+• Developed inventory management system reducing stockouts by 30%
+• Created automated testing suite achieving 85% code coverage
+• Optimized database queries reducing page load time from 3s to 500ms
+
+Junior Developer | CodeFactory | Austin, TX
+June 2019 - December 2019
+
+• Developed features for SaaS project management application
+• Built RESTful APIs using Express.js and MongoDB
+• Participated in agile ceremonies and code reviews
+• Fixed bugs and improved application performance
+
+EDUCATION
+
+Bachelor of Science in Computer Science
+Massachusetts Institute of Technology (MIT) | 2015 - 2019
+GPA: 3.7/4.0
+Relevant Coursework: Distributed Systems, Database Systems, Web Development, Algorithms
+
+PROJECTS
+
+Real-time Collaboration Tool (Open Source)
+• Built Notion-like collaborative editor using React, Node.js, and CRDTs
+• 2K+ GitHub stars, featured in JavaScript Weekly
+• Technologies: React, TypeScript, WebSocket, PostgreSQL
+
+E-commerce Microservices Template
+• Production-ready microservices template for e-commerce applications
+• Includes auth, cart, inventory, and payment services
+• Technologies: Node.js, Docker, Kubernetes, RabbitMQ
+
+CERTIFICATIONS
+• AWS Certified Solutions Architect - Associate (2023)
+• Google Cloud Professional Cloud Developer (2022)
+
+VOLUNTEER
+• Code mentor at local coding bootcamp (2021 - Present)
+• Speaker at Austin JS Meetup - "Building Scalable React Applications" (2022)

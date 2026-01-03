@@ -1,0 +1,24 @@
+# Environment and secrets
+.env
+*.json
+!package.json
+
+# Virtual environment
+koru/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# IDE
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db

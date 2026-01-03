@@ -1,0 +1,82 @@
+JOB TITLE: Full Stack Developer
+COMPANY: TechStartup Co.
+LOCATION: Remote (US-based)
+JOB TYPE: Full-time
+SALARY: $120,000 - $160,000
+
+ABOUT TECHSTARTUP CO.
+TechStartup Co. is a fast-growing SaaS company building the future of team collaboration. 
+Our platform helps remote teams stay connected and productive through innovative features 
+like real-time document editing, video conferencing, and project management tools. 
+We're a team of 50+ passionate builders working to change how teams work together.
+
+THE OPPORTUNITY
+We're looking for a talented Full Stack Developer to join our Product Engineering team. 
+You'll be building features that millions of users interact with daily, working across 
+our entire tech stack from React frontends to Node.js microservices. This is a great 
+opportunity for someone who loves shipping features fast while maintaining code quality.
+
+WHAT YOU'LL DO
+• Build and maintain web applications using React, TypeScript, and Node.js
+• Design and implement RESTful and GraphQL APIs
+• Create responsive, accessible user interfaces
+• Write clean, maintainable, and well-tested code
+• Participate in architecture discussions and technical design reviews
+• Collaborate with designers, product managers, and other engineers
+• Debug production issues and implement fixes
+• Contribute to our engineering blog and documentation
+
+REQUIREMENTS
+• 3+ years of professional experience in full-stack web development
+• Strong proficiency in JavaScript/TypeScript
+• Experience with React (or similar framework: Vue, Angular)
+• Experience with Node.js and Express (or similar: FastAPI, Django)
+• Familiarity with both SQL (PostgreSQL, MySQL) and NoSQL (MongoDB, Redis) databases
+• Understanding of RESTful API design principles
+• Experience with version control (Git) and CI/CD pipelines
+• Strong problem-solving and communication skills
+• Comfortable working in an agile environment
+
+NICE TO HAVE
+• Experience with Docker and Kubernetes
+• Knowledge of GraphQL
+• Experience with AWS or GCP cloud services
+• Familiarity with real-time technologies (WebSockets, Socket.io)
+• Contributions to open source projects
+• Experience with testing frameworks (Jest, Cypress, Playwright)
+• Background in building collaborative or real-time applications
+
+OUR TECH STACK
+• Frontend: React, TypeScript, Next.js, Tailwind CSS
+• Backend: Node.js, Express, GraphQL, PostgreSQL, Redis
+• Infrastructure: AWS, Docker, Kubernetes, GitHub Actions
+• Monitoring: Datadog, Sentry
+• Collaboration: Linear, Notion, Slack, Figma
+
+BENEFITS & PERKS
+• Competitive salary + equity
+• 100% remote work
+• Health, dental, and vision insurance (100% covered)
+• Unlimited PTO (minimum 3 weeks encouraged)
+• $2,500 annual learning budget
+• $1,000 home office setup budget
+• Monthly wellness stipend
+• Annual team retreat (when safe)
+• 12 weeks parental leave
+
+OUR INTERVIEW PROCESS
+1. Initial call with recruiter (30 min)
+2. Technical phone screen (45 min)
+3. Take-home coding challenge (2-3 hours)
+4. Virtual onsite with the team (3 hours)
+   - System design discussion
+   - Code review and pairing session
+   - Team culture fit
+
+We typically complete the interview process within 2 weeks.
+
+EQUAL OPPORTUNITY
+TechStartup Co. is committed to creating a diverse environment. We are proud to be an 
+equal opportunity employer. All qualified applicants will receive consideration for 
+employment without regard to race, color, religion, gender, gender identity or expression, 
+sexual orientation, national origin, disability, or age.
