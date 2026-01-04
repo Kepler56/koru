@@ -4,10 +4,10 @@ An AI-powered Resume and Job Matching System that uses embeddings, semantic sear
 
 ## 🌟 Features
 
-- **Semantic Matching**: Goes beyond keyword matching using language understanding models
-- **Document Parsing**: Extracts structured information from PDF, DOCX, and TXT files
+- **Comprehensive Matching**: Multi-dimensional scoring combining semantic similarity with skills, experience, education, certifications, and project relevance
+- **Deep Document Parsing**: Extracts 20+ fields from resumes including projects, publications, awards, interests, and detailed work history
 - **Multiple Embedding Providers**: SentenceTransformers (local), Ollama (local), Google Vertex AI (cloud)
-- **AI-Generated Explanations**: LangChain-powered match explanations with reasoning
+- **AI-Generated Explanations**: LangChain-powered detailed match explanations with experience analysis, project relevance, and certification fit
 - **Interactive UI**: Streamlit web application for easy interaction
 - **Jupyter Notebook Demo**: Complete workflow demonstration
 
@@ -22,7 +22,8 @@ An AI-powered Resume and Job Matching System that uses embeddings, semantic sear
          ▼                       ▼
 ┌─────────────────────────────────────────┐
 │           Document Parsers              │
-│   (Extract skills, experience, etc.)    │
+│  (Skills, Experience, Projects, Certs,  │
+│   Education, Publications, Interests)   │
 └────────────────┬────────────────────────┘
                  │
                  ▼
@@ -33,19 +34,20 @@ An AI-powered Resume and Job Matching System that uses embeddings, semantic sear
                  │
                  ▼
 ┌─────────────────────────────────────────┐
-│        Similarity Matcher               │
-│      (Cosine Similarity Ranking)        │
+│     Comprehensive Similarity Matcher    │
+│  (Semantic + Skills + Experience +      │
+│   Education + Certs + Projects)         │
 └────────────────┬────────────────────────┘
                  │
                  ▼
 ┌─────────────────────────────────────────┐
 │      LangChain Explanation Chain        │
-│   (AI-powered match explanations)       │
+│   (AI-powered detailed explanations)    │
 └────────────────┬────────────────────────┘
                  │
                  ▼
 ┌─────────────────────────────────────────┐
-│          Streamlit UI / API             │
+│            Streamlit UI                 │
 └─────────────────────────────────────────┘
 ```
 
@@ -58,15 +60,15 @@ koru_2/
 │   ├── main.py                    # Streamlit application
 │   ├── parsers/
 │   │   ├── __init__.py
-│   │   ├── resume_parser.py       # Resume parsing (PDF, DOCX, TXT)
-│   │   └── job_parser.py          # Job description parsing
+│   │   ├── resume_parser.py       # Enhanced resume parsing
+│   │   └── job_parser.py          # Enhanced job description parsing
 │   ├── embeddings/
 │   │   ├── __init__.py
 │   │   ├── embedding_service.py   # Multi-provider embedding service
-│   │   └── similarity.py          # Semantic similarity matching
+│   │   └── similarity.py          # Comprehensive similarity matching
 │   ├── chains/
 │   │   ├── __init__.py
-│   │   └── explanation_chain.py   # LangChain match explanations
+│   │   └── explanation_chain.py   # Enhanced LangChain explanations
 │   └── utils/
 │       ├── __init__.py
 │       └── helpers.py             # Utility functions
@@ -131,7 +133,7 @@ jupyter notebook notebooks/demo.ipynb
 | Provider | Setup | Model |
 |----------|-------|-------|
 | **Ollama** | `ollama pull llama3.2` | Local inference |
-| **Google** | Set `GOOGLE_API_KEY` | Gemini 1.5 Flash |
+| **Google** | Set `GOOGLE_API_KEY` | Gemini 2.5 Flash |
 
 ### Environment Variables
 
@@ -149,24 +151,17 @@ OLLAMA_EMBEDDING_MODEL=nomic-embed-text
 
 # Google AI settings (if using)
 GOOGLE_API_KEY=your_api_key_here
-GOOGLE_MODEL=gemini-1.5-flash
+GOOGLE_MODEL=gemini-2.5-flash
 ```
 
 ## 📖 Usage Guide
-
-### Streamlit App
-
-1. **Upload Documents**: Upload resumes and job descriptions (PDF, DOCX, or TXT)
-2. **Parse Files**: Click "Parse" to extract structured information
-3. **Generate Matches**: Click "Generate Matches" to compute semantic similarity
-4. **View Results**: See ranked matches with scores and skill overlap
-5. **AI Explanations**: Generate detailed explanations for each match
 
 ### Python API
 
 ```python
 from app.parsers import ResumeParser, JobParser
 from app.embeddings import EmbeddingService, SimilarityMatcher
+from app.embeddings.similarity import compute_comprehensive_match
 from app.chains import ExplanationChain
 
 # Parse documents
@@ -181,20 +176,33 @@ embedding_service = EmbeddingService(provider="sentence-transformers")
 resume_embedding = embedding_service.embed_resume(resume)
 job_embedding = embedding_service.embed_job(job)
 
-# Match
+# Get semantic similarity
 matcher = SimilarityMatcher()
-similarity = matcher.compute_similarity_matrix(
+semantic_score = matcher.compute_similarity_matrix(
     resume_embedding.reshape(1, -1), 
     job_embedding.reshape(1, -1)
 )[0, 0]
 
-print(f"Match Score: {similarity:.1%}")
+# Get comprehensive match (NEW)
+match_analysis = compute_comprehensive_match(resume, job, semantic_score)
+print(f"Overall Score: {match_analysis['overall_score']:.1%}")
+print(f"Fit Level: {match_analysis['fit_level']}")
+print(f"Skills Coverage: {match_analysis['skill_analysis']['coverage_percentage']:.1f}%")
+print(f"Experience: {match_analysis['experience_analysis']['analysis']}")
 
-# Generate explanation (requires Ollama or Google API)
+# Generate AI explanation with full context (NEW)
 chain = ExplanationChain(provider="ollama")
-explanation = chain.explain_match(resume, job, similarity)
+explanation = chain.explain_match(resume, job, semantic_score, match_analysis=match_analysis)
 print(explanation.to_text())
 ```
+
+### Streamlit App
+
+1. **Upload Documents**: Upload resumes and job descriptions (PDF, DOCX, or TXT)
+2. **Parse Files**: Click "Parse" to extract structured information
+3. **Generate Matches**: Click "Generate Matches" to compute comprehensive similarity
+4. **View Results**: See ranked matches with component scores and detailed analysis
+5. **AI Explanations**: Generate detailed explanations including project and certification analysis
 
 ## 🔧 Supported File Formats
 
@@ -205,22 +213,47 @@ print(explanation.to_text())
 ## 📊 Extracted Information
 
 ### From Resumes
-- Name, Email, Phone
-- Skills (technical and soft)
-- Work Experience (title, company, description)
-- Education (degree, institution)
-- Certifications
-- Professional Summary
+- **Contact**: Name, Email, Phone, Location, LinkedIn, GitHub
+- **Skills**: Technical and soft skills (auto-detected + section parsing)
+- **Work Experience**: Title, Company, Duration, Location, Description, Key Achievements
+- **Projects**: Name, Description, Technologies, Highlights (GitHub stars, etc.)
+- **Education**: Degree, Field, Institution, Year, GPA, Honors, Coursework
+- **Certifications**: Name, Issuer, Year, Expiry, Credential ID
+- **Publications**: Title, Venue, Year, Authors
+- **Awards & Honors**: Recognition and achievements
+- **Interests**: Personal interests and hobbies
+- **Languages**: Language proficiencies
+- **Calculated Fields**: Total years of experience
 
 ### From Job Descriptions
-- Job Title, Company, Location
-- Required Skills
-- Preferred Skills
-- Experience Requirements
-- Education Requirements
-- Responsibilities
-- Benefits
-- Salary Range
+- **Basic Info**: Title, Company, Location, Job Type, Remote Type
+- **Skills**: Required Skills, Preferred Skills, Tech Stack
+- **Experience**: Required Years (min/max), Experience Level
+- **Education**: Min Education Level, Specific Requirements
+- **Certifications**: Required Certifications, Preferred Certifications
+- **Role Details**: Responsibilities, Project Types, Industry
+- **Compensation**: Salary Range (min/max), Benefits
+- **Team Info**: Team Size, Company Description
+
+## 📈 Comprehensive Matching
+
+The system uses a **weighted multi-dimensional scoring** approach:
+
+| Component | Weight | Description |
+|-----------|--------|-------------|
+| **Semantic Similarity** | 30% | Embedding-based text similarity |
+| **Skills Match** | 25% | Required skills coverage |
+| **Experience Match** | 20% | Years and relevance analysis |
+| **Education Match** | 10% | Degree level and field alignment |
+| **Certifications** | 8% | Required/preferred cert coverage |
+| **Projects** | 7% | Tech stack and type relevance |
+
+### Fit Levels
+- **Excellent** (≥80%): Strong match across all dimensions
+- **Good** (65-79%): Solid match with minor gaps
+- **Moderate** (50-64%): Partial match, notable gaps
+- **Limited** (35-49%): Significant gaps present
+- **Poor** (<35%): Not a good fit
 
 ## 🧪 Sample Data
 
@@ -250,6 +283,7 @@ Parsing:
 ML/Data:
 - `numpy`, `scikit-learn` - Numerical operations
 - `pandas` - Data manipulation
+- `pydantic` - Data validation
 
 Optional:
 - `ollama` - Local LLM inference

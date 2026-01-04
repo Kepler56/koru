@@ -19,14 +19,26 @@ class ParsedJob:
     company: str = ""
     location: str = ""
     job_type: str = ""  # Full-time, Part-time, Contract, etc.
+    remote_type: str = ""  # Remote, Hybrid, On-site
     required_skills: List[str] = field(default_factory=list)
     preferred_skills: List[str] = field(default_factory=list)
     required_experience: str = ""
+    min_years_experience: int = 0
+    max_years_experience: int = 0
     education_requirements: List[str] = field(default_factory=list)
+    min_education_level: str = ""  # Bachelor's, Master's, PhD
+    required_certifications: List[str] = field(default_factory=list)
+    preferred_certifications: List[str] = field(default_factory=list)
     responsibilities: List[str] = field(default_factory=list)
     benefits: List[str] = field(default_factory=list)
     salary_range: str = ""
+    salary_min: int = 0
+    salary_max: int = 0
     description: str = ""
+    industry: str = ""
+    team_size: str = ""
+    tech_stack: List[str] = field(default_factory=list)
+    project_types: List[str] = field(default_factory=list)
     file_name: str = ""
     
     def to_text_for_embedding(self) -> str:
@@ -53,6 +65,9 @@ class ParsedJob:
         if self.preferred_skills:
             parts.append(f"Preferred Skills: {', '.join(self.preferred_skills)}")
         
+        if self.tech_stack:
+            parts.append(f"Tech Stack: {', '.join(self.tech_stack)}")
+        
         if self.responsibilities:
             parts.append(f"Responsibilities: {'; '.join(self.responsibilities)}")
         
@@ -61,6 +76,18 @@ class ParsedJob:
         
         if self.required_experience:
             parts.append(f"Experience Required: {self.required_experience}")
+        
+        if self.required_certifications:
+            parts.append(f"Required Certifications: {', '.join(self.required_certifications)}")
+        
+        if self.preferred_certifications:
+            parts.append(f"Preferred Certifications: {', '.join(self.preferred_certifications)}")
+        
+        if self.project_types:
+            parts.append(f"Project Types: {', '.join(self.project_types)}")
+        
+        if self.industry:
+            parts.append(f"Industry: {self.industry}")
         
         # Include raw text if structured extraction is limited
         if len(parts) < 3 and self.raw_text:
@@ -75,14 +102,26 @@ class ParsedJob:
             "company": self.company,
             "location": self.location,
             "job_type": self.job_type,
+            "remote_type": self.remote_type,
             "required_skills": self.required_skills,
             "preferred_skills": self.preferred_skills,
             "required_experience": self.required_experience,
+            "min_years_experience": self.min_years_experience,
+            "max_years_experience": self.max_years_experience,
             "education_requirements": self.education_requirements,
+            "min_education_level": self.min_education_level,
+            "required_certifications": self.required_certifications,
+            "preferred_certifications": self.preferred_certifications,
             "responsibilities": self.responsibilities,
             "benefits": self.benefits,
             "salary_range": self.salary_range,
+            "salary_min": self.salary_min,
+            "salary_max": self.salary_max,
             "description": self.description,
+            "industry": self.industry,
+            "team_size": self.team_size,
+            "tech_stack": self.tech_stack,
+            "project_types": self.project_types,
             "file_name": self.file_name,
         }
 
@@ -125,7 +164,9 @@ class JobParser:
         "preferred": r"(?i)(preferred|nice to have|bonus|ideal|desired)",
         "benefits": r"(?i)(benefits|perks|what we offer|compensation|why join)",
         "about": r"(?i)(about us|about the company|who we are|company overview)",
-        "skills": r"(?i)(skills|technical skills|competencies|technologies)",
+        "skills": r"(?i)(skills|technical skills|competencies|technologies|tech stack)",
+        "certifications": r"(?i)(certifications?|certificates?|credentials)",
+        "projects": r"(?i)(projects?|project\s*types?|what you.?ll work on)",
     }
     
     def __init__(self):
@@ -177,14 +218,24 @@ class JobParser:
         job.company = self._extract_company(raw_text)
         job.location = self._extract_location(raw_text)
         job.job_type = self._extract_job_type(raw_text)
+        job.remote_type = self._extract_remote_type(raw_text)
         job.required_skills = self._extract_required_skills(raw_text)
         job.preferred_skills = self._extract_preferred_skills(raw_text)
         job.required_experience = self._extract_experience_requirement(raw_text)
+        job.min_years_experience, job.max_years_experience = self._extract_experience_years(raw_text)
         job.education_requirements = self._extract_education_requirements(raw_text)
+        job.min_education_level = self._extract_min_education_level(raw_text)
+        job.required_certifications = self._extract_required_certifications(raw_text)
+        job.preferred_certifications = self._extract_preferred_certifications(raw_text)
         job.responsibilities = self._extract_responsibilities(raw_text)
         job.benefits = self._extract_benefits(raw_text)
         job.salary_range = self._extract_salary(raw_text)
+        job.salary_min, job.salary_max = self._extract_salary_range(raw_text)
         job.description = self._extract_description(raw_text)
+        job.industry = self._extract_industry(raw_text)
+        job.team_size = self._extract_team_size(raw_text)
+        job.tech_stack = self._extract_tech_stack(raw_text)
+        job.project_types = self._extract_project_types(raw_text)
         
         return job
     
@@ -457,3 +508,237 @@ class JobParser:
                 return para[:1000]
         
         return text[:1000] if text else ""
+
+    def _extract_remote_type(self, text: str) -> str:
+        """Extract remote work type (Remote, Hybrid, On-site)."""
+        text_lower = text.lower()
+        
+        if "fully remote" in text_lower or "100% remote" in text_lower or "remote first" in text_lower:
+            return "Remote"
+        elif "hybrid" in text_lower:
+            return "Hybrid"
+        elif "on-site" in text_lower or "onsite" in text_lower or "in-office" in text_lower:
+            return "On-site"
+        elif "remote" in text_lower:
+            return "Remote"
+        
+        return ""
+    
+    def _extract_experience_years(self, text: str) -> tuple:
+        """Extract minimum and maximum years of experience."""
+        patterns = [
+            r"(\d+)\s*(?:-|to)\s*(\d+)\s*(?:years?|yrs?)\s*(?:of\s+)?(?:experience|exp)",
+            r"(\d+)\+\s*(?:years?|yrs?)\s*(?:of\s+)?(?:experience|exp)",
+            r"(?:minimum|at least)\s*(\d+)\s*(?:years?|yrs?)",
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, text.lower())
+            if match:
+                groups = match.groups()
+                if len(groups) == 2 and groups[1]:
+                    return (int(groups[0]), int(groups[1]))
+                elif len(groups) >= 1 and groups[0]:
+                    years = int(groups[0])
+                    return (years, years + 5)  # Assume range of 5 years above minimum
+        
+        return (0, 0)
+    
+    def _extract_min_education_level(self, text: str) -> str:
+        """Extract minimum education level required."""
+        text_lower = text.lower()
+        
+        if "ph.d" in text_lower or "phd" in text_lower or "doctorate" in text_lower:
+            return "PhD"
+        elif "master" in text_lower or "m.s." in text_lower or "m.a." in text_lower or "mba" in text_lower:
+            return "Master's"
+        elif "bachelor" in text_lower or "b.s." in text_lower or "b.a." in text_lower:
+            return "Bachelor's"
+        elif "associate" in text_lower:
+            return "Associate's"
+        elif "high school" in text_lower or "ged" in text_lower:
+            return "High School"
+        
+        return ""
+    
+    def _extract_required_certifications(self, text: str) -> List[str]:
+        """Extract required certifications from job description."""
+        certifications = []
+        
+        # Get requirements section
+        req_section = self._extract_section(text, "requirements")
+        cert_section = self._extract_section(text, "certifications")
+        search_text = (req_section + " " + cert_section).lower() if req_section or cert_section else text.lower()
+        
+        # Common certification patterns
+        cert_patterns = [
+            r"(AWS\s+(?:Certified\s+)?[A-Za-z\s]+(?:Architect|Developer|Administrator|Engineer|Practitioner))",
+            r"(Azure\s+(?:Certified\s+)?[A-Za-z\s]+(?:Administrator|Developer|Architect|Engineer))",
+            r"(Google\s+(?:Cloud\s+)?(?:Certified\s+)?[A-Za-z\s]+(?:Engineer|Architect|Developer))",
+            r"(Certified\s+[A-Za-z\s]+(?:Professional|Associate|Expert))",
+            r"(PMP|CISSP|CPA|CFA|CCNA|CCNP|CompTIA\s+[A-Za-z+]+|TOGAF|Six\s+Sigma|Scrum\s+Master|ITIL)",
+            r"(TensorFlow\s+(?:Developer\s+)?Certificate)",
+        ]
+        
+        for pattern in cert_patterns:
+            matches = re.finditer(pattern, search_text, re.IGNORECASE)
+            for match in matches:
+                cert = match.group(1).strip()
+                if cert and cert not in certifications:
+                    certifications.append(cert)
+        
+        return certifications[:10]
+    
+    def _extract_preferred_certifications(self, text: str) -> List[str]:
+        """Extract preferred/nice-to-have certifications."""
+        certifications = []
+        
+        pref_section = self._extract_section(text, "preferred")
+        if not pref_section:
+            return certifications
+        
+        cert_patterns = [
+            r"(AWS\s+(?:Certified\s+)?[A-Za-z\s]+(?:Architect|Developer|Administrator|Engineer|Practitioner))",
+            r"(Azure\s+(?:Certified\s+)?[A-Za-z\s]+)",
+            r"(Google\s+(?:Cloud\s+)?(?:Certified\s+)?[A-Za-z\s]+)",
+            r"(Certified\s+[A-Za-z\s]+(?:Professional|Associate|Expert))",
+            r"(PMP|CISSP|CPA|CFA|CCNA|CCNP|CompTIA\s+[A-Za-z+]+)",
+        ]
+        
+        for pattern in cert_patterns:
+            matches = re.finditer(pattern, pref_section, re.IGNORECASE)
+            for match in matches:
+                cert = match.group(1).strip()
+                if cert and cert not in certifications:
+                    certifications.append(cert)
+        
+        return certifications[:10]
+    
+    def _extract_salary_range(self, text: str) -> tuple:
+        """Extract salary min and max as integers."""
+        patterns = [
+            r"\$(\d{2,3}(?:,\d{3})?)\s*(?:k|K)?\s*(?:-|to)\s*\$?(\d{2,3}(?:,\d{3})?)\s*(?:k|K)?",
+            r"(\d{2,3}(?:,\d{3})?)\s*(?:-|to)\s*(\d{2,3}(?:,\d{3})?)\s*(?:per year|annually|/year)",
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, text)
+            if match:
+                try:
+                    min_sal = int(match.group(1).replace(",", ""))
+                    max_sal = int(match.group(2).replace(",", ""))
+                    
+                    # Handle 'k' notation (e.g., 150k)
+                    if min_sal < 1000:
+                        min_sal *= 1000
+                    if max_sal < 1000:
+                        max_sal *= 1000
+                    
+                    return (min_sal, max_sal)
+                except (ValueError, AttributeError):
+                    pass
+        
+        return (0, 0)
+    
+    def _extract_industry(self, text: str) -> str:
+        """Extract industry/domain from job description."""
+        industries = {
+            "healthcare": ["healthcare", "medical", "pharma", "hospital", "clinical", "biotech"],
+            "finance": ["finance", "banking", "fintech", "investment", "trading", "insurance"],
+            "technology": ["software", "saas", "tech company", "startup", "technology"],
+            "e-commerce": ["e-commerce", "retail", "marketplace", "shopping"],
+            "education": ["education", "edtech", "learning", "university", "school"],
+            "manufacturing": ["manufacturing", "industrial", "factory", "production"],
+            "media": ["media", "entertainment", "streaming", "content", "publishing"],
+            "consulting": ["consulting", "advisory", "professional services"],
+            "government": ["government", "public sector", "federal", "state agency"],
+            "automotive": ["automotive", "vehicle", "car", "mobility"],
+            "aerospace": ["aerospace", "aviation", "defense", "space"],
+            "energy": ["energy", "oil", "gas", "renewable", "utilities"],
+        }
+        
+        text_lower = text.lower()
+        
+        for industry, keywords in industries.items():
+            for keyword in keywords:
+                if keyword in text_lower:
+                    return industry.title()
+        
+        return ""
+    
+    def _extract_team_size(self, text: str) -> str:
+        """Extract team size information."""
+        patterns = [
+            r"(?:team\s+of\s+|work\s+with\s+)(\d+(?:-\d+)?)\s*(?:people|engineers|developers|members)",
+            r"(\d+(?:-\d+)?)\s*(?:person|member)\s+team",
+            r"(?:small|medium|large)\s+team",
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if match:
+                if "small" in match.group(0).lower():
+                    return "Small (2-5)"
+                elif "medium" in match.group(0).lower():
+                    return "Medium (6-15)"
+                elif "large" in match.group(0).lower():
+                    return "Large (15+)"
+                else:
+                    return match.group(1)
+        
+        return ""
+    
+    def _extract_tech_stack(self, text: str) -> List[str]:
+        """Extract technology stack mentioned in job."""
+        tech_stack = []
+        
+        # Look for tech stack section or general mentions
+        patterns = [
+            r"(?i)tech\s*stack[:\s]+([^\n]+)",
+            r"(?i)technologies[:\s]+([^\n]+)",
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, text)
+            if match:
+                techs = re.split(r'[,;|]', match.group(1))
+                for tech in techs:
+                    tech = tech.strip()
+                    if tech and 2 < len(tech) < 30:
+                        tech_stack.append(tech)
+        
+        # Also extract from skills
+        text_lower = text.lower()
+        for skill in self.TECH_SKILLS:
+            if skill in text_lower and skill.title() not in tech_stack:
+                tech_stack.append(skill.title() if len(skill) > 3 else skill.upper())
+        
+        return list(set(tech_stack))[:20]
+    
+    def _extract_project_types(self, text: str) -> List[str]:
+        """Extract types of projects mentioned in job."""
+        project_types = []
+        
+        project_keywords = {
+            "Machine Learning": ["machine learning", "ml models", "ml pipeline", "ml systems"],
+            "Data Engineering": ["data pipeline", "etl", "data warehouse", "data infrastructure"],
+            "Web Development": ["web application", "web services", "frontend", "backend"],
+            "Mobile Development": ["mobile app", "ios", "android", "mobile development"],
+            "API Development": ["api development", "rest api", "graphql", "microservices"],
+            "Cloud Infrastructure": ["cloud infrastructure", "aws", "azure", "gcp", "cloud architecture"],
+            "DevOps": ["ci/cd", "deployment", "infrastructure", "devops"],
+            "Data Science": ["data analysis", "analytics", "statistical", "data science"],
+            "AI/NLP": ["nlp", "natural language", "llm", "generative ai", "chatbot"],
+            "Computer Vision": ["computer vision", "image processing", "object detection"],
+        }
+        
+        text_lower = text.lower()
+        
+        for project_type, keywords in project_keywords.items():
+            for keyword in keywords:
+                if keyword in text_lower:
+                    if project_type not in project_types:
+                        project_types.append(project_type)
+                    break
+        
+        return project_types

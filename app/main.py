@@ -19,7 +19,7 @@ load_dotenv()
 # Import application modules
 from app.parsers import ResumeParser, JobParser
 from app.embeddings import EmbeddingService, SimilarityMatcher
-from app.embeddings.similarity import compute_skill_overlap
+from app.embeddings.similarity import compute_skill_overlap, compute_comprehensive_match
 from app.chains import ExplanationChain
 from app.utils.helpers import load_config, format_score
 
@@ -64,6 +64,14 @@ st.markdown("""
         background-color: #ffebee;
         color: #c62828;
     }
+    .fit-excellent { background-color: #28a745; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: bold; }
+    .fit-good { background-color: #17a2b8; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: bold; }
+    .fit-moderate { background-color: #ffc107; color: black; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: bold; }
+    .fit-limited { background-color: #fd7e14; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: bold; }
+    .fit-poor { background-color: #dc3545; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: bold; }
+    .cert-tag { background-color: #fff3e0; color: #e65100; padding: 0.25rem 0.5rem; border-radius: 15px; margin: 0.2rem; font-size: 0.85rem; display: inline-block; }
+    .project-card { background-color: #f5f5f5; border-radius: 8px; padding: 0.8rem; margin: 0.5rem 0; border-left: 3px solid #9c27b0; }
+    .component-score { display: inline-block; margin: 0.2rem; padding: 0.3rem 0.6rem; border-radius: 5px; font-size: 0.85rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -197,16 +205,16 @@ def main():
             0.05
         )
         
-        # API Keys (if using Google)
-        if embedding_provider == "google" or llm_provider == "google":
-            st.subheader("API Configuration")
-            google_api_key = st.text_input(
-                "Google API Key",
-                value=os.getenv("GOOGLE_API_KEY", ""),
-                type="password"
-            )
-            if google_api_key:
-                os.environ["GOOGLE_API_KEY"] = google_api_key
+        # # API Keys (if using Google)
+        # if embedding_provider == "google" or llm_provider == "google":
+        #     st.subheader("API Configuration")
+        #     google_api_key = st.text_input(
+        #         "Google API Key",
+        #         value=os.getenv("GOOGLE_API_KEY", ""),
+        #         type="password"
+        #     )
+        #     if google_api_key:
+        #         os.environ["GOOGLE_API_KEY"] = google_api_key
         
         st.divider()
         
@@ -247,19 +255,59 @@ def main():
                         st.session_state.resumes = parse_uploaded_files(
                             resume_files, parser, "resume"
                         )
+                        # Clear embeddings since documents changed
+                        st.session_state.resume_embeddings = None
+                        st.session_state.matches = None
             
             # Show parsed resumes
             if st.session_state.resumes:
                 st.write(f"**{len(st.session_state.resumes)} resume(s) loaded**")
                 for i, resume in enumerate(st.session_state.resumes):
                     with st.expander(f"Resume: {resume.file_name}"):
-                        st.write(f"**Name:** {resume.name or 'N/A'}")
-                        st.write(f"**Email:** {resume.email or 'N/A'}")
-                        display_skills(resume.skills, "Skills")
-                        if resume.experience:
+                        col_a, col_b = st.columns(2)
+                        with col_a:
+                            st.write(f"**Name:** {resume.name or 'N/A'}")
+                            st.write(f"**Email:** {resume.email or 'N/A'}")
+                            st.write(f"**Location:** {getattr(resume, 'location', '') or 'N/A'}")
+                        with col_b:
+                            total_exp = getattr(resume, 'total_years_experience', 0)
+                            st.write(f"**Total Experience:** {total_exp} years" if total_exp else "**Total Experience:** N/A")
                             st.write(f"**Experience entries:** {len(resume.experience)}")
-                        if resume.education:
                             st.write(f"**Education entries:** {len(resume.education)}")
+                        
+                        display_skills(resume.skills, "Skills")
+                        
+                        # Certifications
+                        certs = getattr(resume, 'certifications', [])
+                        if certs:
+                            cert_names = [c.get('name', c) if isinstance(c, dict) else str(c) for c in certs]
+                            st.write("**Certifications:**")
+                            cert_html = ''.join([f'<span class="cert-tag">{c}</span>' for c in cert_names[:8]])
+                            st.markdown(cert_html, unsafe_allow_html=True)
+                        
+                        # Projects
+                        projects = getattr(resume, 'projects', [])
+                        if projects:
+                            st.write(f"**Projects ({len(projects)}):**")
+                            for proj in projects[:3]:
+                                proj_name = proj.get('name', 'Unknown') if isinstance(proj, dict) else str(proj)
+                                proj_techs = proj.get('technologies', []) if isinstance(proj, dict) else []
+                                st.markdown(f"<div class='project-card'><strong>{proj_name}</strong><br/><small>{', '.join(proj_techs[:5])}</small></div>", unsafe_allow_html=True)
+                        
+                        # Education details
+                        if resume.education:
+                            st.write("**Education:**")
+                            for edu in resume.education[:2]:
+                                degree = edu.get('degree', '')
+                                field = edu.get('field', '')
+                                institution = edu.get('institution', '')
+                                gpa = edu.get('gpa', '')
+                                st.write(f"  • {degree} {field} - {institution}" + (f" (GPA: {gpa})" if gpa else ""))
+                        
+                        # Interests
+                        interests = getattr(resume, 'interests', [])
+                        if interests:
+                            st.write(f"**Interests:** {', '.join(interests[:6])}")
         
         with col2:
             st.subheader("💼 Upload Job Descriptions")
@@ -298,19 +346,57 @@ def main():
                                 st.error(f"Error: {e}")
                         
                         st.session_state.jobs = parsed_jobs
+                        # Clear embeddings since documents changed
+                        st.session_state.job_embeddings = None
+                        st.session_state.matches = None
             
             # Show parsed jobs
             if st.session_state.jobs:
                 st.write(f"**{len(st.session_state.jobs)} job(s) loaded**")
                 for i, job in enumerate(st.session_state.jobs):
                     with st.expander(f"Job: {job.title or job.file_name}"):
-                        st.write(f"**Title:** {job.title or 'N/A'}")
-                        st.write(f"**Company:** {job.company or 'N/A'}")
-                        st.write(f"**Location:** {job.location or 'N/A'}")
+                        col_a, col_b = st.columns(2)
+                        with col_a:
+                            st.write(f"**Title:** {job.title or 'N/A'}")
+                            st.write(f"**Company:** {job.company or 'N/A'}")
+                            location = job.location or 'N/A'
+                            remote = getattr(job, 'remote_type', '')
+                            st.write(f"**Location:** {location}" + (f" ({remote})" if remote else ""))
+                        with col_b:
+                            st.write(f"**Job Type:** {job.job_type or 'N/A'}")
+                            industry = getattr(job, 'industry', '')
+                            st.write(f"**Industry:** {industry or 'N/A'}")
+                            salary = job.salary_range or 'N/A'
+                            st.write(f"**Salary:** {salary}")
+                        
                         display_skills(job.required_skills, "Required Skills")
                         display_skills(job.preferred_skills, "Preferred Skills")
-                        if job.required_experience:
-                            st.write(f"**Experience Required:** {job.required_experience}")
+                        
+                        # Tech stack
+                        tech_stack = getattr(job, 'tech_stack', [])
+                        if tech_stack:
+                            display_skills(tech_stack[:10], "Tech Stack")
+                        
+                        # Experience & Education requirements
+                        col_c, col_d = st.columns(2)
+                        with col_c:
+                            if job.required_experience:
+                                st.write(f"**Experience Required:** {job.required_experience}")
+                            min_edu = getattr(job, 'min_education_level', '')
+                            if min_edu:
+                                st.write(f"**Min Education:** {min_edu}")
+                        with col_d:
+                            # Required certifications
+                            req_certs = getattr(job, 'required_certifications', [])
+                            if req_certs:
+                                st.write("**Required Certifications:**")
+                                cert_html = ''.join([f'<span class="cert-tag">{c}</span>' for c in req_certs[:5]])
+                                st.markdown(cert_html, unsafe_allow_html=True)
+                        
+                        # Project types
+                        project_types = getattr(job, 'project_types', [])
+                        if project_types:
+                            st.write(f"**Project Types:** {', '.join(project_types)}")
         
         # Generate embeddings and match
         st.divider()
@@ -362,6 +448,28 @@ def main():
         if st.session_state.matches:
             st.subheader("🎯 Match Results")
             
+            # Show scoring methodology
+            with st.expander("ℹ️ How Scores Are Calculated", expanded=False):
+                st.markdown("""
+                **Overall Score** is a weighted combination of 6 components:
+                
+                | Component | Weight | Description |
+                |-----------|--------|-------------|
+                | **Skills Match** | 30% | Percentage of required/preferred skills the candidate has |
+                | **Semantic Similarity** | 25% | How similar the resume text is to the job description (using AI embeddings) |
+                | **Experience Match** | 20% | Years of experience vs. job requirements |
+                | **Education Match** | 10% | Degree level and field alignment |
+                | **Certifications** | 10% | Matching certifications (required + preferred) |
+                | **Projects** | 5% | Relevance of candidate's projects to job tech stack |
+                
+                **Fit Levels:**
+                - 🟢 **Excellent** (80%+): Strong match, highly recommended
+                - 🔵 **Good** (65-79%): Solid candidate, recommended
+                - 🟡 **Moderate** (50-64%): Potential fit, worth considering
+                - 🟠 **Limited** (35-49%): Significant gaps, proceed with caution
+                - 🔴 **Poor** (<35%): Not recommended for this role
+                """)
+            
             # Initialize explanation chain if available
             explanation_chain = get_explanation_chain(llm_provider)
             
@@ -381,31 +489,84 @@ def main():
                     score_class = get_score_class(score)
                     
                     with st.container():
+                        # Compute comprehensive match analysis
+                        match_analysis = compute_comprehensive_match(resume, job, score)
+                        fit_level = match_analysis.get('fit_level', 'Unknown')
+                        fit_class = f"fit-{fit_level.lower()}"
+                        
                         st.markdown(f"""
                         <div class="match-card">
                             <h4>💼 {job.title or job.file_name}</h4>
                             <p><strong>Company:</strong> {job.company or 'N/A'}</p>
-                            <p><strong>Match Score:</strong> <span class="{score_class}">{format_score(score)}</span></p>
+                            <p><strong>Overall Score:</strong> <span class="{score_class}">{format_score(match_analysis['overall_score'])}</span>
+                               <span class="{fit_class}" style="margin-left: 1rem;">{fit_level} Fit</span></p>
                         </div>
                         """, unsafe_allow_html=True)
                         
+                        # Component scores breakdown
+                        with st.expander("📊 Score Breakdown", expanded=True):
+                            comp_scores = match_analysis.get('component_scores', {})
+                            col_s1, col_s2, col_s3 = st.columns(3)
+                            with col_s1:
+                                st.metric("Semantic Match", f"{comp_scores.get('semantic', 0):.0%}", help="Text similarity from embeddings")
+                                st.metric("Skills Match", f"{comp_scores.get('skills', 0):.0%}", help="Required skills coverage")
+                            with col_s2:
+                                st.metric("Experience Match", f"{comp_scores.get('experience', 0):.0%}", help="Years of experience fit")
+                                st.metric("Education Match", f"{comp_scores.get('education', 0):.0%}", help="Education level alignment")
+                            with col_s3:
+                                st.metric("Certifications", f"{comp_scores.get('certifications', 0):.0%}", help="Relevant certifications")
+                                st.metric("Projects Match", f"{comp_scores.get('projects', 0):.0%}", help="Relevant project experience")
+                        
                         # Skill overlap analysis
-                        skill_overlap = compute_skill_overlap(
-                            resume.skills,
-                            job.required_skills
-                        )
+                        skill_analysis = match_analysis.get('skill_analysis', {})
+                        if not skill_analysis:
+                            skill_analysis = compute_skill_overlap(resume.skills, job.required_skills)
                         
                         col1, col2, col3 = st.columns(3)
                         with col1:
-                            display_skills(skill_overlap['matching_skills'][:10], "✅ Matching Skills")
+                            display_skills(skill_analysis.get('matching_skills', [])[:10], "✅ Matching Skills")
                         with col2:
-                            display_skills(skill_overlap['missing_skills'][:10], "❌ Missing Skills", is_missing=True)
+                            display_skills(skill_analysis.get('missing_skills', [])[:10], "❌ Missing Skills", is_missing=True)
                         with col3:
+                            coverage = skill_analysis.get('coverage_percentage', 0)
+                            matched = skill_analysis.get('matched_count', 0)
+                            total = skill_analysis.get('total_required', 0)
                             st.metric(
                                 "Skill Coverage",
-                                f"{skill_overlap['coverage_percentage']:.0f}%",
-                                delta=f"{skill_overlap['matched_count']}/{skill_overlap['total_required']} skills"
+                                f"{coverage:.0f}%",
+                                delta=f"{matched}/{total} skills"
                             )
+                        
+                        # Experience & Certification Analysis
+                        exp_analysis = match_analysis.get('experience_analysis', {})
+                        cert_analysis = match_analysis.get('certification_analysis', {})
+                        
+                        if exp_analysis.get('candidate_years') or cert_analysis.get('matched_certs'):
+                            with st.expander("📋 Experience & Certifications"):
+                                col_e1, col_e2 = st.columns(2)
+                                with col_e1:
+                                    if exp_analysis:
+                                        cand_years = exp_analysis.get('candidate_years', 'N/A')
+                                        req_min = exp_analysis.get('required_min', 'N/A')
+                                        req_max = exp_analysis.get('required_max', 'N/A')
+                                        st.write(f"**Candidate Experience:** {cand_years} years")
+                                        st.write(f"**Required:** {req_min}-{req_max} years" if req_max != 'N/A' else f"**Required:** {req_min}+ years")
+                                with col_e2:
+                                    if cert_analysis:
+                                        matched_certs = cert_analysis.get('matched_certs', [])
+                                        if matched_certs:
+                                            st.write("**Matching Certifications:**")
+                                            for cert in matched_certs[:5]:
+                                                st.write(f"  ✅ {cert}")
+                        
+                        # Project relevance
+                        proj_analysis = match_analysis.get('project_analysis', {})
+                        if proj_analysis.get('relevant_projects'):
+                            with st.expander("🔧 Relevant Projects"):
+                                for proj in proj_analysis.get('relevant_projects', [])[:3]:
+                                    proj_name = proj.get('name', 'Project')
+                                    proj_techs = proj.get('technologies', [])
+                                    st.markdown(f"<div class='project-card'><strong>{proj_name}</strong><br/><small>{', '.join(proj_techs[:5])}</small></div>", unsafe_allow_html=True)
                         
                         # Generate explanation
                         if explanation_chain:
@@ -413,12 +574,34 @@ def main():
                                 if st.button(f"Generate Explanation", key=f"explain_{resume_idx}_{match.job_index}"):
                                     with st.spinner("Generating explanation..."):
                                         try:
+                                            # Ensure skill_analysis is populated
+                                            if not skill_analysis or not skill_analysis.get('matching_skills'):
+                                                skill_analysis = compute_skill_overlap(
+                                                    resume.skills, 
+                                                    job.required_skills + (job.preferred_skills or [])
+                                                )
+                                            
+                                            # Build comprehensive context for explanation
+                                            explanation_context = {
+                                                **match_analysis,
+                                                'skill_analysis': skill_analysis,
+                                                'candidate_education': resume.education,
+                                                'required_education': getattr(job, 'min_education_level', None),
+                                                'candidate_experience_years': getattr(resume, 'total_years_experience', 0),
+                                                'required_experience': job.required_experience,
+                                                'candidate_certifications': getattr(resume, 'certifications', []),
+                                                'required_certifications': getattr(job, 'required_certifications', []),
+                                            }
+                                            
                                             explanation = explanation_chain.explain_match(
-                                                resume, job, score, skill_overlap
+                                                resume, job, match_analysis['overall_score'], 
+                                                skill_analysis, match_analysis=explanation_context
                                             )
                                             st.markdown(explanation.to_text())
                                         except Exception as e:
                                             st.error(f"Error generating explanation: {e}")
+                                            import traceback
+                                            st.code(traceback.format_exc())
                         
                         st.divider()
         else:
@@ -470,8 +653,17 @@ def main():
                     st.session_state.job_embeddings
                 )
                 
-                resume_labels = [r.name or r.file_name[:20] for r in st.session_state.resumes]
-                job_labels = [j.title or j.file_name[:20] for j in st.session_state.jobs]
+                # Get the number of embeddings to ensure labels match matrix dimensions
+                n_resume_embeddings = st.session_state.resume_embeddings.shape[0]
+                n_job_embeddings = st.session_state.job_embeddings.shape[0]
+                
+                # Only use labels for resumes/jobs that have embeddings
+                resume_labels = [r.name or r.file_name[:20] for r in st.session_state.resumes[:n_resume_embeddings]]
+                job_labels = [j.title or j.file_name[:20] for j in st.session_state.jobs[:n_job_embeddings]]
+                
+                # Check if we need to regenerate embeddings (lists have changed since last generation)
+                if len(st.session_state.resumes) != n_resume_embeddings or len(st.session_state.jobs) != n_job_embeddings:
+                    st.warning("⚠️ Documents have been modified. Please click 'Generate Matches' again to update the analysis.")
                 
                 df = pd.DataFrame(
                     sim_matrix,
