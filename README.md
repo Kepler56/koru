@@ -1,8 +1,8 @@
-# Smart Resume & Job Matcher 🎯
+# Smart resume & job matcher
 
 An AI-powered Resume and Job Matching System that uses embeddings, semantic search, and Generative AI reasoning to match candidates' resumes with the most relevant job opportunities.
 
-## 🌟 Features
+## Features
 
 - **Comprehensive Matching**: Multi-dimensional scoring combining semantic similarity with skills, experience, education, certifications, and project relevance
 - **Deep Document Parsing**: Extracts 20+ fields from resumes including projects, publications, awards, interests, and detailed work history
@@ -11,7 +11,7 @@ An AI-powered Resume and Job Matching System that uses embeddings, semantic sear
 - **Interactive UI**: Streamlit web application for easy interaction
 - **Jupyter Notebook Demo**: Complete workflow demonstration
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────┐     ┌─────────────────┐
@@ -51,7 +51,7 @@ An AI-powered Resume and Job Matching System that uses embeddings, semantic sear
 └─────────────────────────────────────────┘
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 koru_2/
@@ -82,7 +82,7 @@ koru_2/
 └── README.md                      # This file
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone and Setup
 
@@ -118,7 +118,7 @@ streamlit run app/main.py
 jupyter notebook notebooks/demo.ipynb
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Embedding Providers
 
@@ -154,7 +154,7 @@ GOOGLE_API_KEY=your_api_key_here
 GOOGLE_MODEL=gemini-2.5-flash
 ```
 
-## 📖 Usage Guide
+## Usage Guide
 
 ### Python API
 
@@ -210,7 +210,7 @@ print(explanation.to_text())
 - **DOCX**: Uses python-docx for Word documents
 - **TXT**: Plain text files with any encoding
 
-## 📊 Extracted Information
+## Extracted Information
 
 ### From Resumes
 - **Contact**: Name, Email, Phone, Location, LinkedIn, GitHub
@@ -235,7 +235,7 @@ print(explanation.to_text())
 - **Compensation**: Salary Range (min/max), Benefits
 - **Team Info**: Team Size, Company Description
 
-## 📈 Comprehensive Matching
+## Comprehensive Matching
 
 The system uses a **weighted multi-dimensional scoring** approach:
 
@@ -255,7 +255,7 @@ The system uses a **weighted multi-dimensional scoring** approach:
 - **Limited** (35-49%): Significant gaps present
 - **Poor** (<35%): Not a good fit
 
-## 🧪 Sample Data
+## Sample Data
 
 The `data/` directory contains sample resumes and job descriptions for testing:
 
@@ -269,7 +269,7 @@ The `data/` directory contains sample resumes and job descriptions for testing:
 - `full_stack_developer.txt` - Remote full-stack position
 - `data_analyst.txt` - Business intelligence role in retail
 
-## 📚 Dependencies
+## Dependencies
 
 Core:
 - `streamlit` - Web application framework
@@ -290,7 +290,7 @@ Optional:
 - `google-generativeai` - Google Gemini API
 - `faiss-cpu` - Vector similarity search
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -298,11 +298,11 @@ Optional:
 4. Run tests
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is for educational purposes. Please check individual library licenses for production use.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - SentenceTransformers for embedding models
 - LangChain for LLM orchestration
